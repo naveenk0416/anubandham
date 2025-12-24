@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shop/screens/auth/views/components/sign_up_form.dart';
-import 'package:shop/route/route_constants.dart';
-
 import '../../../constants.dart';
+import '../../../route/route_constants.dart';
+
+// ✅ IMPORT YOUR FORM FILE
+import 'package:shop/screens/auth/views/components/sign_up_form.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -13,7 +14,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _formKey = GlobalKey<FormState>();
+  bool agree = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,68 +34,89 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Let’s get started!",
+                    "Let's get started!",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   const Text(
-                    "Please enter your valid data in order to create an account.",
+                    "Create your matrimony profile by entering your details.",
                   ),
                   const SizedBox(height: defaultPadding),
-                  SignUpForm(formKey: _formKey),
-                  const SizedBox(height: defaultPadding),
+
+                  /// ✅ TERMS & CONDITIONS
                   Row(
                     children: [
                       Checkbox(
-                        onChanged: (value) {},
-                        value: false,
+                        value: agree,
+                        onChanged: (value) {
+                          setState(() {
+                            agree = value ?? false;
+                          });
+                        },
                       ),
                       Expanded(
                         child: Text.rich(
                           TextSpan(
-                            text: "I agree with the",
+                            text: "I agree with the ",
                             children: [
                               TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     Navigator.pushNamed(
-                                        context, termsOfServicesScreenRoute);
+                                      context,
+                                      termsOfServicesScreenRoute,
+                                    );
                                   },
-                                text: " Terms of service ",
+                                text: "Terms of Service ",
                                 style: const TextStyle(
                                   color: primaryColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const TextSpan(
-                                text: "& privacy policy.",
-                              ),
+                              const TextSpan(text: "& Privacy Policy."),
                             ],
                           ),
                         ),
                       )
                     ],
                   ),
+
                   const SizedBox(height: defaultPadding * 2),
-                  ElevatedButton(
-                    onPressed: () {
-                      // There is 2 more screens while user complete their profile
-                      // afre sign up, it's available on the pro version get it now
-                      // 🔗 https://theflutterway.gumroad.com/l/fluttershop
-                      Navigator.pushNamed(context, entryPointScreenRoute);
-                    },
-                    child: const Text("Continue"),
+
+                  /// ✅ OPEN MATRIMONY FORM
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: agree
+                          ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MultiStepForm(),
+                                ),
+                              );
+                            }
+                          : null,
+                      child: const Text("Create Matrimony Profile"),
+                    ),
                   ),
+
+                  const SizedBox(height: defaultPadding),
+
+                  /// ✅ LOGIN LINK
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Do you have an account?"),
+                      const Text("Already have an account?"),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, logInScreenRoute);
+                          Navigator.pushNamed(
+                            context,
+                            logInScreenRoute,
+                          );
                         },
                         child: const Text("Log in"),
-                      )
+                      ),
                     ],
                   ),
                 ],
